@@ -1,5 +1,13 @@
 test removed vehicle function
-test unlocks
-implement unlocks2.lua
-Move Hardcoded KDs from main into seperate file in elexon-incl and implement into main
-make risky transactions only trigger once in main
+
+
+repair unlock.lua/unlock everything function in elexon.lua
+
+
+
+improve and implement unlocks2.lua into elexon.lua
+
+improve and implement kd_editor.lua into elexon.lua
+
+
+make risky transactions only trigger once in elexon.lua for duration of game session(until user closes game)
