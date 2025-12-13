@@ -1,120 +1,89 @@
---- KD Editor section
+return function(parent_menu)
+    if not parent_menu then
+        log.error("Parent menu is nil in kd_editor")
+        return
+    end
 
+    -- KD Editor root tab (child of Recovery)
+    local KDS = parent_menu:add_tab("KD Editor")
 
-    KDS = ScriptMainMenu:add_tab("KD Editor")
+    local function show_kd_message(title, kd, kills, deaths, frozen)
+        gui.show_message(
+            title,
+            string.format(
+                "%sKD: %.2f\nKills: %d\nDeaths: %d",
+                frozen and "(Frozen)\n" or "",
+                kd,
+                kills,
+                deaths
+            )
+        )
+    end
 
-    TypeKd = KDS:add_tab("Custom KD")
+    -- Custom KD
+    local TypeKd = KDS:add_tab("Custom KD")
     TypeKd:add_text("Set your KD to:")
-    
-    KdValue = TypeKd:add_input_float("Set your KD")
-    
+
+    local KdValue = TypeKd:add_input_float("Set your KD")
+
     TypeKd:add_button("Set KD", function()
         local kd = KdValue:get_value()
-    
-        
-        if kd > 0 then
-            
-            local kills = 1000000 
-            local deaths = math.floor(kills / kd)
-    
-            
-            stats.set_int("MPPLY_KILLS_PLAYERS", kills)
-            stats.set_int("MPPLY_DEATHS_PLAYER", deaths)
-    
-            gui.show_message(
-                "KD update",
-                "Your KD is now set to " .. kd ..
-            )
-    
-        elseif kd == 0 then
-            
-            local kills = 0
-            local deaths = 1000000  
-    
-            stats.set_int("MPPLY_KILLS_PLAYERS", kills)
-            stats.set_int("MPPLY_DEATHS_PLAYER", deaths)
-    
-            gui.show_message(
-                "KD update",
-                "Your KD is now set to " .. kd ..
-            )
-    
-        else
-            
-            local kills = 1000000  
-            local deaths = math.floor(kills / kd)  
-    
-            
-            if deaths < 0 then
-                deaths = math.abs(deaths)
-                kills = math.abs(kills)
-            end
-    
-            stats.set_int("MPPLY_KILLS_PLAYERS", kills)
-            stats.set_int("MPPLY_DEATHS_PLAYER", deaths)
-            gui.show_message(
-                "KD update",
-                "Your KD is now set to " .. kd ..
-            )
+        local base = 1000000
 
+        local kills, deaths
+        if kd == 0 then
+            kills = 0
+            deaths = base
+        else
+            kills = math.floor(kd * base)
+            deaths = base
         end
 
-        if kd ~= 0 then
-            
-            local deaths = 1000000  
-            local kills = math.floor(kd * deaths)  
-    
-            stats.set_int("MPPLY_KILLS_PLAYERS", kills)
-            stats.set_int("MPPLY_DEATHS_PLAYER", deaths)
-    
-         end
+        stats.set_int("MPPLY_KILLS_PLAYERS", kills)
+        stats.set_int("MPPLY_DEATHS_PLAYER", deaths)
+
+        show_kd_message("KD Change", kd, kills, deaths, false)
     end)
 
-    KillDeathEdit = KDS:add_tab("KILLS/DEATHS EDITOR")  
-    
-    KillValue = KillDeathEdit:add_input_int("Kills")
-    DeathValue = KillDeathEdit:add_input_int("Deaths")
-    
+    -- Kills / Deaths Editor
+    local KillDeathEdit = KDS:add_tab("KILLS/DEATHS EDITOR")
+    local KillValue = KillDeathEdit:add_input_int("Kills")
+    local DeathValue = KillDeathEdit:add_input_int("Deaths")
+
     KillDeathEdit:add_button("Set Kills & Deaths", function()
         local kills = KillValue:get_value()
         local deaths = DeathValue:get_value()
-        
+        if deaths <= 0 then deaths = 1 end
+
+        local kd = kills / deaths
+
         stats.set_int("MPPLY_KILLS_PLAYERS", kills)
         stats.set_int("MPPLY_DEATHS_PLAYER", deaths)
-        gui.show_message(
-                "KD Editor",
-                "Your KD is now set to " .. kills .. "/" .. deaths .. 
-    )
+
+        show_kd_message("KD Change", kd, kills, deaths, false)
     end)
-    
-    FrozenKD = KDS:add_tab("Frozen K/D Editor")
+
+    -- Frozen KD
+    local FrozenKD = KDS:add_tab("Frozen K/D Editor")
     FrozenKD:add_text("Set your frozen K/D to:")
+    local FrozenKdValue = FrozenKD:add_input_float("Frozen KD")
 
-FrozenKD:add_button("FROZEN CUSTOM K/D", function()
-    local kd = KdValue:get_value()
-    local base = 100000 -- increase for more "freeze"
+    FrozenKD:add_button("FROZEN CUSTOM K/D", function()
+        local kd = FrozenKdValue:get_value()
+        local base = 100000
 
-    local kills
-    local deaths
+        local kills, deaths
+        if kd == 0 then
+            kills = 0
+            deaths = base
+        else
+            kills = math.floor(kd * base)
+            deaths = base
+        end
 
-    if kd == 0 then
-        kills = 0
-        deaths = base
-    else
-        kills = math.floor(kd * base)
-        deaths = base
-    end
+        stats.set_int("MPPLY_KILLS_PLAYERS", kills)
+        stats.set_int("MPPLY_DEATHS_PLAYER", deaths)
 
-    stats.set_int("MPPLY_KILLS_PLAYERS", kills)
-    stats.set_int("MPPLY_DEATHS_PLAYER", deaths)
-
-    gui.show_message(
-        "KD Change",
-        string.format(
-            "Frozen \nKD: %.2f\nKills: %d\nDeaths: %d",
-            kd,
-            kills,
-            deaths
-        )
-    )
-end)
+        show_kd_message("KD Change", kd, kills, deaths, true)
+    end)
+end
