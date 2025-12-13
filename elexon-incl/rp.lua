@@ -1,3 +1,10 @@
+return function(recoverymenu)
+    if not recoverymenu then
+        log.error("recoverymenu is nil in rp")
+        return
+    end
+
+
 -- Compressed RP table for low ranks as a CSV string
 local levelsCSV = "0,800,2100,3800,6100,9500,12500,16000,19800,24000,28500,33400,38700,44200,50200,56400,63000,69900,77100,84700,92500,100700,109200,118000,127100,136500,146200,156200,166500,177100,188000,199200,210700,222400,234500,246800,259400,272300,285500,299000,312700,326800,341000,355600,370500,385600,401000,416600,432600,448800,465200"
 
@@ -32,7 +39,7 @@ local function setRankRP(levelValue, isCrew, changeSession)
         gui.show_message("Crew Rank Editor", "Your Crew Rank is now "..levelValue)
     else
         stats.set_int(MPX() .. "CHAR_SET_RP_GIFT_ADMIN", rp)
-        local msg = "Your rank is set to "..levelValue
+        local msg = "Your Rank is set to "..levelValue
         if changeSession then
             log.debug("changing session...")
 
@@ -46,19 +53,21 @@ local function setRankRP(levelValue, isCrew, changeSession)
 end
 
 -- Rank Editor Tab
-RankEditor = ranksmenu:add_tab("Custom Rank Editor")
-RankEditor:add_text("Set your rank to:")
-local rankLevel = RankEditor:add_input_int("rank")
+RankEditor = recoverymenu:add_tab("Custom Rank Editor")
+RankEditor:add_text("Set your Rank to:")
+local rankLevel = RankEditor:add_input_int("Rank")
 
-RankEditor:add_button("Set rank and change session", function()
+RankEditor:add_button("Set Rank and change session", function()
     setRankRP(rankLevel:get_value(), false, true)
 end)
 
 -- Crew Rank Editor Tab
-CrewRankEditor = ranksmenu:add_tab("Crew Rank Editor")
+CrewRankEditor = recoverymenu:add_tab("Crew Rank Editor")
 CrewRankEditor:add_text("Set your Rank to:")
 local crewRankLevel = CrewRankEditor:add_input_int("Crew Rank")
 
 CrewRankEditor:add_button("set Crew Rank and change session", function()
     setRankRP(crewRankLevel:get_value(), false, true)
 end)
+
+end
