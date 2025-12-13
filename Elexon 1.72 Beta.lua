@@ -20,29 +20,39 @@ gui.show_message("TCC", "Love you internet people <3")
 
 log.warning("Enjoy Elexon :D")
 
-    ScriptMainMenu = gui.get_tab("Elexon made by TheCookieTho")
+    ScriptMainMenu = gui.get_tab("Elexon made by TCC & RROCAS")
     ScriptMainMenu:add_text("Elexon 1.72 Beta")
 
+    reoverymenu = ScriptMainMenu:add_tab("Recovery Menu")
 
-    moneymethods = ScriptMainMenu:add_tab("Money Methods")
-    ranksmenu = ScriptMainMenu:add_tab("Ranks Menu")
-    unlocks = ScriptMainMenu:add_tab("Unlocks Menu")
+    --[[ will add submenu for stats like KD later and move it to recovery menu ]]
 
 
     
 VehiclesMenu = ScriptMainMenu:add_tab("Vehicle Menu")
 
 
+
+--[[ Removed Vehicles Auto-Loader(on session start) ]]
 local removed_vehicles = require("elexon-incl.removed_vehicles") -- load the removed vehicles list
 
-VehiclesMenu:add_button("Removed Vehicles(WIP)", function() -- button to set globals for removed vehicles
-    for _, offset in ipairs(removed_vehicles) do -- iterate through each offset
-        print("Setting global:", 262145 + offset) -- debug print to yimmenu console
-        globals.set_int(262145 + offset, 1) -- set the global to 1
+local removed_vehicles_triggered = false
+
+script.register_looped("removed_vehicles_auto", function(script)
+    script:yield()
+    if network.is_session_started() and not removed_vehicles_triggered then
+        log.info("[Load Removed Vehicles][DEBUG] Starting auto-trigger for removed vehicles")
+        for _, offset in ipairs(removed_vehicles) do -- iterate through each offset
+            log.info("[Load Removed Vehicles][DEBUG] Setting global: " .. tostring(262145 + offset))
+            globals.set_int(262145 + offset, 1) -- set the global to 1
+        end
+        log.info("[Load Removed Vehicles][DEBUG] Finished auto-trigger")
+        removed_vehicles_triggered = true
     end
 end)
 
 
+--[[ Missions Menu seems unnecessary for the scripts purpose atm ]]
 
     MissionEdit = ScriptMainMenu:add_tab("Missions Menu")
 
@@ -62,6 +72,8 @@ end)
 
 MissionEdit:add_separator()
 
+
+--[[ Rank Editor Implementation ]]
 
 -- Compressed RP table for low ranks as a CSV string
 local levelsCSV = "0,800,2100,3800,6100,9500,12500,16000,19800,24000,28500,33400,38700,44200,50200,56400,63000,69900,77100,84700,92500,100700,109200,118000,127100,136500,146200,156200,166500,177100,188000,199200,210700,222400,234500,246800,259400,272300,285500,299000,312700,326800,341000,355600,370500,385600,401000,416600,432600,448800,465200"
@@ -112,7 +124,7 @@ local function setRankRP(levelValue, isCrew, changeSession)
 end
 
 -- Rank Editor Tab
-RankEditor = ranksmenu:add_tab("Custom Rank Editor")
+RankEditor = reoverymenu:add_tab("Custom Rank Editor")
 RankEditor:add_text("Set your rank to:")
 local rankLevel = RankEditor:add_input_int("rank")
 
@@ -122,7 +134,7 @@ RankEditor:add_button("Set rank and change session", function()
 end)
 
 -- Crew Rank Editor Tab
-CrewRankEditor = ranksmenu:add_tab("Crew Rank Editor")
+CrewRankEditor = reoverymenu:add_tab("Crew Rank Editor")
 CrewRankEditor:add_text("Set your Rank to:")
 local crewRankLevel = CrewRankEditor:add_input_int("Crew Rank")
 
@@ -131,9 +143,8 @@ CrewRankEditor:add_button("set Crew Rank and change session", function()
 end)
 
     
-    LatestUnlock = unlocks:add_tab("Unlocker Menu")
-    LSCMUnlocker = unlocks:add_tab("LCSM Unlocker")
-
+    LatestUnlock = reoverymenu:add_tab("Unlocker Menu")
+-- Removed LCSM Unlocker as it had no functionality. will add into generic unlocks later when bools are known
 
 local unlocks_config = require("elexon-incl.unlocks")
 
@@ -141,12 +152,11 @@ function unlock_packed_bools(from, to)
     for i = from, to do
         stats.set_packed_stat_bool(i, true)
         log.info("[DEBUG] Unlocking stat ID:", i) -- prints to YimMenu console
-        -- gui.show_message("Unlocking", "Stat ID: " .. i)  -- Removed to prevent spam/crash
     end
 end
 
 LatestUnlock:add_button("Unlock Everything", function()
-    log.info("[DEBUG] Starting Unlock Everything") -- optional start marker
+    log.info("[DEBUG] Starting to Unlock Everything") -- optional start marker
 
     -- Generic unlocks
     for _, range in ipairs(unlocks_config.generic) do
@@ -164,7 +174,9 @@ end)
 
 
 
+--[[ Risky Money Methods ]]
 
+-- Hashes might be wrong, nothing gets added in game but logs show its triggered
 
     local TransactionManager <const> = {};
     TransactionManager.__index = TransactionManager
@@ -192,6 +204,8 @@ end)
             {label = "200 THOUSAND",    hash = 0xCDCF2380},
             {label = "190 THOUSAND",   hash = 0xFD389995}
         }
+
+        instance.allTriggered = false
     
         return instance;
     end
@@ -223,34 +237,49 @@ end)
                 NETSHOPPING.NET_GAMESERVER_BASKET_END()
             end
     
-            local status, tranny_id = NETSHOPPING.NET_GAMESERVER_BEGIN_SERVICE(-1, 0x57DE404E, item_hash, 0x562592BB, self:GetPrice(item_hash), 2)
+            local price = self:GetPrice(item_hash)
+            log.info("[DEBUG] Price for hash " .. string.format("0x%X", item_hash) .. ": " .. tostring(price))
+            local status, tranny_id = NETSHOPPING.NET_GAMESERVER_BEGIN_SERVICE(-1, 0x57DE404E, item_hash, 0x562592BB, price, 2)
+            log.info("[DEBUG] Begin service status: " .. tostring(status) .. ", tranny_id: " .. tostring(tranny_id))
             if status then
                 NETSHOPPING.NET_GAMESERVER_CHECKOUT_START(tranny_id)
+                log.info("[DEBUG] Checkout started for tranny_id: " .. tostring(tranny_id))
+            else
+                log.warning("[DEBUG] Failed to begin service for hash " .. string.format("0x%X", item_hash))
             end
         end)
     end
     
     function TransactionManager:Init()
-        local sub_transactionL  = moneymethods:add_tab("OP MONEY METHODS")
+        local sub_transactionL  = reoverymenu:add_tab("Risky Money Method(Patched)")
 
-        for _, stealth in ipairs(self:GetTransactionList()) do
-            sub_transactionL:add_button(stealth.label, function()
+        sub_transactionL:add_button("Trigger All Money Transactions(PATCHED)", function()
+            if self.allTriggered then
+                gui.show_message("Already used this recently..", "Wait a bit before Using again.")
+                return
+            end
+            log.info("[DEBUG] Starting to trigger all money transactions")
+            for _, stealth in ipairs(self:GetTransactionList()) do
+                log.info("[DEBUG] Triggering transaction: " .. stealth.label)
                 self:TriggerTransaction(stealth.hash)
-            end)
-        end    
+            end
+            log.info("[DEBUG] Finished triggering all money transactions")
+            gui.show_message("Transactions Triggered", "All money transactions have been triggered.")
+            self.allTriggered = true
+        end)
     end
     
     
     TransactionManager.new():Init()
 
-    NightClubMoney = moneymethods:add_tab("NIGHTCLUB SAFE LOOP")
+    NightClubMoney = reoverymenu:add_tab("Nightclub money loop")
 
     SafeAmount = 250000
     SafeCapacity = 23680 --NIGHTCLUBMAXSAFEVALUE
     IncomeStart = 23657 --NIGHTCLUBINCOMEUPTOPOP5
     IncomeEnd = 23676 --NIGHTCLUBINCOMEUPTOPOP100
     
-    NCRSCB = NightClubMoney:add_checkbox("ENABLE NIGHTCLUB LOOP")
+    NCRSCB = NightClubMoney:add_checkbox("Enable Nightclub money loop")
     script.register_looped("nightclubremotelooptest", function(script)
         script:yield()
         if NCRSCB:is_enabled() == true then
@@ -275,27 +304,38 @@ end)
 
 
 
---[[ Report Checker ]]
-    CheckUrReports = ScriptMainMenu:add_tab("REPORTS")
-    CheckUrReports:add_text("GRIEFING: " .. stats.get_int("MPPLY_GRIEFING"))
-    CheckUrReports:add_text("EXPLOITING: " .. stats.get_int("MPPLY_EXPLOITS"))
-    CheckUrReports:add_text("ABUSING BUGS: " .. stats.get_int("MPPLY_GAME_EXPLOITS"))
-    CheckUrReports:add_text("ANNOYING PEOPLE IN TEXT: " .. stats.get_int("MPPLY_TC_ANNOYINGME"))
-    CheckUrReports:add_text("HATE SPEECH IN TEXT: " .. stats.get_int("MPPLY_TC_HATE"))
-    CheckUrReports:add_text("ANNOYING PEOPLE IN VOICE: " .. stats.get_int("MPPLY_VC_ANNOYINGME"))
-    CheckUrReports:add_text("HATE SPEECH IN VOICE: " .. stats.get_int("MPPLY_VC_HATE"))
-    CheckUrReports:add_text("OFFENSIVE LANGUAGE: " .. stats.get_int("MPPLY_OFFENSIVE_LANGUAGE"))
-    CheckUrReports:add_text("OFFENSIVE TAGPLATE: " .. stats.get_int("MPPLY_OFFENSIVE_TAGPLATE"))
-    CheckUrReports:add_text("OFFENSIVE CONTENT: " .. stats.get_int("MPPLY_OFFENSIVE_UGC"))
-    CheckUrReports:add_text("BAD CREW NAME: " .. stats.get_int("MPPLY_BAD_CREW_NAME"))
-    CheckUrReports:add_text("BAD CREW MOTTO: " .. stats.get_int("MPPLY_BAD_CREW_MOTTO"))
-    CheckUrReports:add_text("BAD CREW STATUS: " .. stats.get_int("MPPLY_BAD_CREW_STATUS"))
-    CheckUrReports:add_text("BAD CREW EMBLEM: " .. stats.get_int("MPPLY_BAD_CREW_EMBLEM"))
-    CheckUrReports:add_separator()
-    CheckUrReports:add_text("COMMENDS:")
-    CheckUrReports:add_separator()
-    CheckUrReports:add_text("FRIENDLY: " .. stats.get_int("MPPLY_FRIENDLY"))
-    CheckUrReports:add_text("HELPFUL: " .. stats.get_int("MPPLY_HELPFUL"))
+--[[ Report Checker & Editor. might add auto session change for applying Later ]] 
+    CheckUrReports = reoverymenu:add_tab("REPORTS")
+local function add_editable_report(label, stat_key)
+    local current = stats.get_int(stat_key)
+    CheckUrReports:add_text(label .. ": " .. current)
+    local input = CheckUrReports:add_input_int("New " .. label)
+    input:set_value(current)
+    CheckUrReports:add_button("Edit " .. label, function()
+        stats.set_int(stat_key, input:get_value())
+        gui.show_message("Edited", label .. " set to " .. input:get_value())
+    end)
+end
+
+add_editable_report("GRIEFING", "MPPLY_GRIEFING")
+add_editable_report("EXPLOITING", "MPPLY_EXPLOITS")
+add_editable_report("ABUSING BUGS", "MPPLY_GAME_EXPLOITS")
+add_editable_report("ANNOYING PEOPLE IN TEXT", "MPPLY_TC_ANNOYINGME")
+add_editable_report("HATE SPEECH IN TEXT", "MPPLY_TC_HATE")
+add_editable_report("ANNOYING PEOPLE IN VOICE", "MPPLY_VC_ANNOYINGME")
+add_editable_report("HATE SPEECH IN VOICE", "MPPLY_VC_HATE")
+add_editable_report("OFFENSIVE LANGUAGE", "MPPLY_OFFENSIVE_LANGUAGE")
+add_editable_report("OFFENSIVE TAGPLATE", "MPPLY_OFFENSIVE_TAGPLATE")
+add_editable_report("OFFENSIVE CONTENT", "MPPLY_OFFENSIVE_UGC")
+add_editable_report("BAD CREW NAME", "MPPLY_BAD_CREW_NAME")
+add_editable_report("BAD CREW MOTTO", "MPPLY_BAD_CREW_MOTTO")
+add_editable_report("BAD CREW STATUS", "MPPLY_BAD_CREW_STATUS")
+add_editable_report("BAD CREW EMBLEM", "MPPLY_BAD_CREW_EMBLEM")
+CheckUrReports:add_separator()
+CheckUrReports:add_text("COMMENDS:")
+CheckUrReports:add_separator()
+add_editable_report("FRIENDLY", "MPPLY_FRIENDLY")
+add_editable_report("HELPFUL", "MPPLY_HELPFUL")
 
 
 
@@ -304,7 +344,9 @@ local VEHICLE_REWARD_DATA = 129 -- 3A ? 40 ? 5D ? ? ? 2A +1
 
 local should_run_script = false
 
--- It's actually possible to save blacklisted vehicles as PV, but doing so requires patching a lot of scripts, and once the patches are disabled, the game will instantly delete these vehicles anyway, so it's not worth it.
+
+--[[ Claim Current Vehicle as Personal Vehicle(PV) ]]
+
 local function IS_VEHICLE_VALID_FOR_PV(vehicle_hash)
     return scr_function.call_script_function("freemode", 0x913BB, "bool", {
         { "int", vehicle_hash }
@@ -382,6 +424,8 @@ end)
 
 
 ----------------------------------------------------------------------
+
+-- Obviously not us, will change credits and move to settings tab when implemented
 
 ilovecredits = ScriptMainMenu:add_tab("C R E D I T S")
 
