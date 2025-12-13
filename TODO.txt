@@ -1,4 +1,5 @@
 update "Claim vehicle as PV" function when new globals get published, currently crashes game
+https://github.com/szalikdev/VehicleReward use this for updating it
 
 test removed vehicle function
 
