@@ -1,3 +1,8 @@
+try implementing rank editing from
+https://github.com/YimMenu-Lua/RankEditor
+
+fix nightclub safe loop and tp to nightclub
+
 update hashes for risky money methods
 
 Fix "unlock everything"
