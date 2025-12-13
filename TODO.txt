@@ -1,16 +1,9 @@
-update "Claim vehicle as PV" function when new globals get published, currently crashes game
-https://github.com/szalikdev/VehicleReward use this for updating it
+update hashes for risky money methods
 
-test removed vehicle function
-
-
-repair unlock.lua/unlock everything function in elexon.lua
-
-
+Fix "unlock everything"
 
 improve and implement unlocks2.lua into elexon.lua
 
 improve and implement kd_editor.lua into elexon.lua
 
-
-make risky transactions only trigger once in elexon.lua for duration of game session(until user closes game)
+add script settings that might be needed
