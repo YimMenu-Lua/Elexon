@@ -1,0 +1,5 @@
+# Ignore the entire GLOBALS folder
+GLOBALS/
+
+# Ignore this specific file inside elexon-incl
+elexon-incl/incl Template
