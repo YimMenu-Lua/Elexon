@@ -10,6 +10,7 @@ local function MPX()
 end
 
 player_male = (ENTITY.GET_ENTITY_MODEL(PLAYER.PLAYER_PED_ID()) == joaat("mp_m_freemode_01"))
+player_female = (ENTITY.GET_ENTITY_MODEL(PLAYER.PLAYER_PED_ID()) == joaat("mp_m_freemode_0"))
 
 FMISSIONC = "fm_mission_controller"
 FMISSIONC2020 = "fm_mission_controller_2020"
