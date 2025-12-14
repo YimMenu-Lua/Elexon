@@ -1,4 +1,27 @@
-        stats.set_int(MPX() .. "GANGOPS_FLOW_MISSION_PROG", 240)
+-- elexon-incl/unlocks2.lua
+local M = {}
+
+function M.apply(MPX)
+    if not MPX then
+        log.error("MPX function not passed to unlocks2.apply")
+        return
+    end
+
+
+    stats.set_int(MPX() .. "GANGOPS_FLOW_MISSION_PROG", 240)
+    stats.set_int(MPX() .. "GANGOPS_HEIST_STATUS", 229378)
+    stats.set_int(MPX() .. "GANGOPS_FLOW_NOTIFICATIONS", 1557)
+
+    stats.set_int(MPX() .. "FIXER_GENERAL_BS", -1)
+    stats.set_int(MPX() .. "FIXER_COMPLETED_BS", -1)
+    stats.set_int(MPX() .. "FIXER_STORY_BS", -1)
+
+    -- KEEP ALL YOUR OTHER STATS EXACTLY THE SAME
+    -- Just indented inside this function
+
+
+
+stats.set_int(MPX() .. "GANGOPS_FLOW_MISSION_PROG", 240)
         stats.set_int(MPX() .. "GANGOPS_HEIST_STATUS", 229378)
         stats.set_int(MPX() .. "GANGOPS_FLOW_NOTIFICATIONS", 1557)
         stats.set_int(MPX() .. "GANGOPS_FLOW_MISSION_PROG", 240)
@@ -2550,13 +2573,9 @@
         stats.set_int(MPX() .. "LFETIME_HANGAR_BUY_COMPLET", 50) -- Trade price for microlight/rogue/alphaz1/havok/starling/molotok/tula/bombushka/howard/mogul/pyro/seabreeze/nokota/hunter
         stats.set_int(MPX() .. "SALV23_SCOPE_BS", -1) -- police5 trade price
         stats.set_int(MPX() .. "MOST_TIME_ON_3_PLUS_STARS", 300000) -- police4 trade price
-        gui.show_message(
-			"UNLOCKER",
-			"Everything has been unlocked!"
-    )
-    end)
-    LatestUnlock:add_separator()
-    LatestUnlock:add_button("TIME RELATED STATS", function()
+
+        log.info("[DEBUG] Unlocked int stats.")
+
         stats.set_int("MPPLY_TOTAL_PLAYING_TIME", 2073600000)
         stats.set_int("MPPLY_LEADERBOARD_PLAYING_TIME", 2073600000)
         stats.set_int("MPPLY_MP_PLAYING_TIME_NEW", 2073600000)
@@ -2622,13 +2641,9 @@
         stats.set_int(MPX() .. "TIME_IN_CAR", 1047483647)
         stats.set_int(MPX() .. "TOTAL_TIME_UNDERWATER", 1047483647)
         stats.set_int(MPX() .. "TOTAL_TIME_CINEMA", 1047483647)
-        gui.show_message(
-			"UNLOCKER",
-			"Time related stats have been maxed out!"
-)
-    end)
-    LatestUnlock:add_separator()
-    LatestUnlock:add_button("BOOLS", function()
+
+        log.info("[DEBUG] Unlocked time stats.")
+
         stats.set_bool(MPX() .. "AWD_TEEING_OFF", true)
         stats.set_bool(MPX() .. "AWD_PARTY_NIGHT", true)
         stats.set_bool(MPX() .. "AWD_BILLIONAIRE_GAMES", true)
@@ -2867,15 +2882,9 @@
         stats.set_bool("MPPLY_AWD_GANGOPS_IAA", true)
         stats.set_bool("MPPLY_AWD_GANGOPS_SUBMARINE", true)
         stats.set_bool("MPPLY_AWD_GANGOPS_MISSILE", true)
-        gui.show_message(
-			"UNLOCKER",
-			"Bools have been unlocked!"
-)
-    end)
-    
-    LatestUnlock:add_separator()
 
-    LatestUnlock:add_button("Diamond Casino outfits", function()
+        log.info("[DEBUG] Unlocked bool stats.")
+
         stats.set_bool_masked(MPX() .. "CASINOHSTPSTAT_BOOL1", true, 63) -- Refuse Collectors
         stats.set_bool_masked(MPX() .. "CASINOHSTPSTAT_BOOL2", true, 0) -- Undertakers
         stats.set_bool_masked(MPX() .. "CASINOHSTPSTAT_BOOL2", true, 1) -- Valet Outfits
@@ -2898,70 +2907,27 @@
         stats.set_bool_masked(MPX() .. "CASINOHSTPSTAT_BOOL2", true, 20) -- Infiltration: Upgraded Tech
         stats.set_bool_masked(MPX() .. "CASINOHSTPSTAT_BOOL2", true, 21) -- Infiltration: Advanced Tech
         stats.set_bool_masked(MPX() .. "CASINOHSTPSTAT_BOOL2", true, 22) -- Infiltration: Modernized Tech
-        gui.show_message(
-			"UNLOCKER",
-			"Diamond Casino outfits are now unlocked!"
-)
-    end)
 
-    LatestUnlock:add_separator()
-    
-    LatestUnlock:add_button("OPPRESSOR MKII TRADE PRICE", function()
         stats.set_masked_int(MPX() .. "BUSINESSBATPSTAT_INT379", 5, 5, 5) --Pegassi Oppressor Mk II (Trade Price)
-        gui.show_message(
-			"UNLOCKER",
-			"OPPRESSOR MKII TRADE PRICE IS NOW UNLOCKED"
-)
-    end)
-    
-    LatestUnlock:add_separator()
 
-    LatestUnlock:add_button("ALL TATTOOS", function()
+        log.info("[DEBUG] Unlocked masked bool and int stats.")
+
         stats.set_int(MPX() .. "TATTOO_FM_CURRENT_32", -1)
         for i = 0, 53 do
             stats.set_int(MPX() .. "TATTOO_FM_UNLOCKS_" .. i, -1)
-            gui.show_message(
-                "UNLOCKER",
-                "ALL TATTOOS ARE NOW UNLOCKED"
-    )
         end
-    end)
-    
-    LatestUnlock:add_separator()
 
-    LatestUnlock:add_button("SKULL TATTOO", function()
         stats.set_bool(MPX() .. "AWD_500_HEADSHOTS", true)
-        gui.show_message(
-			"UNLOCKER",
-			"SKULL TATTOO IS NOW UNLCOKED"
-)
-    end)
 
-    LatestUnlock:add_separator()
-
-    LSCMUnlocker:add_button("REP 1000", function()
         for i = 262145 + 30958, 262145 + 30987 do
             globals.set_float(i, 100000)
-            gui.show_message(
-                "UNLOCKER",
-                "LSCM REPUTATION LEVEL IS NOW 1000"
-    )
+
         end
-    end)
-    
-    LSCMUnlocker:add_separator()
-
-    LSCMUnlocker:add_button("LSCM PRIZE RIDE", function()
+  
         stats.set_bool(MPX() .. "CARMEET_PV_CHLLGE_CMPLT", true)
-        gui.show_message(
-			"UNLOCKER",
-			"LSCM PRIZE RIDE IS NOW UNLOCKED"
-)
-    end)
 
-    LSCMUnlocker:add_separator()
+        
 
-    LatestUnlock:add_button("CHARACTER SKILLS", function()
         stats.set_int(MPX() .. "SCRIPT_INCREASE_DRIV", 100)
         stats.set_int(MPX() .. "SCRIPT_INCREASE_FLY", 100)
         stats.set_int(MPX() .. "SCRIPT_INCREASE_LUNG", 100)
@@ -2969,54 +2935,19 @@
         stats.set_int(MPX() .. "SCRIPT_INCREASE_STAM", 100)
         stats.set_int(MPX() .. "SCRIPT_INCREASE_STL", 100)
         stats.set_int(MPX() .. "SCRIPT_INCREASE_STRN", 100)
-        gui.show_message(
-			"UNLOCKER",
-			"CHARACTER SKILLS ARE NOW MAXED OUT"
-)
-    end)
 
-    LatestUnlock:add_separator()
-
-    LatestUnlock:add_button("POLICE CARS TRADE PRICE", function()
         stats.set_int(MPX() .. "MOST_TIME_ON_3_PLUS_STARS", 300000)
         stats.set_int(MPX() .. "SALV23_SCOPE_BS", -1)
         stats.set_int(MPX() .. "SALV23_INST_PROG", -1)
-        gui.show_message(
-			"UNLOCKER",
-			"POLICE CAR TRADE PRICES ARE NOW UNLOCKED"
-)
-    end)
-    
-    LatestUnlock:add_separator()
 
-    LatestUnlock:add_button("XMAS 2023", function()
         globals.set_int(262145 + 35157, 1) --XMASGIFTS2023
         globals.set_int(262145 + 35158, 1) --NEWYEARSGIFTS2023
-        gui.show_message(
-			"UNLOCKER",
-			"XMAS 2023 GIFTS ARE NOW UNLOCKED"
-)
-    end)
-    
-    LatestUnlock:add_separator()
 
-    LatestUnlock:add_button("TAXI LIVERY FOR EUDORA", function()
         stats.set_masked_int(MPX() .. "DLC22022PSTAT_INT536", 10, 16, 8)
-        gui.show_message(
-			"UNLOCKER",
-			"TAXI LIVERY FOR EUDORA IS NOW UNLOCKED"
-)
-    end)
-    
-    LatestUnlock:add_separator()
 
-    LatestUnlock:add_button("TAXI LIVERY FOR BROADWAY", function()
         stats.set_int(MPX() .. "AWD_TAXIDRIVER", 50)
-        gui.show_message(
-			"UNLOCKER",
-			"TAXI LIVERY FOR BROADWAY IS NOW UNLOCKED"
-)
-    end)
 
-    LatestUnlock:add_separator()
-end
+log.info("[DEBUG] Completed all unlocks.")
+
+    end
+    return M

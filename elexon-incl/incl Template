@@ -1,0 +1,11 @@
+
+--[[ this is an example]]
+return function(recoverymenu)
+    if not recoverymenu then
+        log.error("recoverymenu is nil in rp")
+        return
+    end
+
+    -- add code here
+
+end

@@ -15,7 +15,7 @@ FMISSIONC = "fm_mission_controller"
 FMISSIONC2020 = "fm_mission_controller_2020"
 HISLANDP = "heist_island_planning"
 
-gui.show_message("TCC", "Love you internet people <3")
+gui.show_message("TCC & RROCAS", "Love you internet people <3")
 
 
 log.warning("Enjoy Elexon :D")
@@ -23,7 +23,8 @@ log.warning("Enjoy Elexon :D")
     ScriptMainMenu = gui.get_tab("Elexon made by TCC & RROCAS")
     ScriptMainMenu:add_text("Elexon 1.72 Beta")
 
-    reoverymenu = ScriptMainMenu:add_tab("Recovery Menu")
+    recoverymenu = ScriptMainMenu:add_tab("Recovery Menu")
+    VehiclesMenu = ScriptMainMenu:add_tab("Vehicle Menu")
     settings = ScriptMainMenu:add_tab("Script Settings")
     settings:add_text("No settings available yet.")
 
@@ -31,7 +32,10 @@ log.warning("Enjoy Elexon :D")
 
 
     
-VehiclesMenu = ScriptMainMenu:add_tab("Vehicle Menu")
+
+require("elexon-incl.kd_editor")(recoverymenu)
+require("elexon-incl.rp")(recoverymenu)
+
 
 
 
@@ -45,7 +49,7 @@ script.register_looped("removed_vehicles_auto", function(script)
     if network.is_session_started() and not removed_vehicles_triggered then
         log.info("[Load Removed Vehicles][DEBUG] Starting auto-trigger for removed vehicles")
         for _, offset in ipairs(removed_vehicles) do -- iterate through each offset
-            log.info("[Load Removed Vehicles][DEBUG] Setting global: " .. tostring(262145 + offset))
+            print("[Load Removed Vehicles][DEBUG] Setting global: " .. tostring(262145 + offset))
             globals.set_int(262145 + offset, 1) -- set the global to 1
         end
         log.info("[Load Removed Vehicles][DEBUG] Finished auto-trigger")
@@ -75,77 +79,16 @@ end)
 MissionEdit:add_separator()
 
 
---[[ Rank Editor Implementation ]]
-
--- Compressed RP table for low ranks as a CSV string
-local levelsCSV = "0,800,2100,3800,6100,9500,12500,16000,19800,24000,28500,33400,38700,44200,50200,56400,63000,69900,77100,84700,92500,100700,109200,118000,127100,136500,146200,156200,166500,177100,188000,199200,210700,222400,234500,246800,259400,272300,285500,299000,312700,326800,341000,355600,370500,385600,401000,416600,432600,448800,465200"
-
--- Parse CSV into a Lua table at runtime
-local baseLevels = {}
-for v in string.gmatch(levelsCSV, "[^,]+") do
-    table.insert(baseLevels, tonumber(v))
+-- MP Helper
+local function mp()
+    return "MP" .. stats.get_int("MPPLY_LAST_MP_CHAR") .. "_"
 end
 
--- Function to get RP for any rank 1-8000
-local function getRPForRank(rank)
-    if rank <= #baseLevels then
-        return baseLevels[rank]
-    end
-    -- Quadratic approximation for high ranks
-    return math.floor(25*rank^2 + 23575*rank - 1023150)
-end
+local packed_unlocks = require("elexon-incl.unlocks")
+local stat_unlocks   = require("elexon-incl.unlocks2")
 
--- Helper function to set RP for player or crew
-local function setRankRP(levelValue, isCrew, changeSession)
-    if levelValue <= 0 or levelValue > 8000 then
-        gui.show_message("ERROR", "Rank "..levelValue.." is out of range (1-8000).")
-        return
-    end
-
-    local rp = getRPForRank(levelValue)
-
-    if isCrew then
-        for i = 0, 4 do
-            stats.set_int("MPPLY_CREW_LOCAL_XP_"..i, rp)
-        end
-        gui.show_message("Crew Rank Editor", "Your Crew Rank is now "..levelValue)
-    else
-        stats.set_int(MPX() .. "CHAR_SET_RP_GIFT_ADMIN", rp)
-        globals.set_int(1575036, 11)
-        globals.set_int(1574589, 1)
-        globals.set_int(1574589, 0)
-        local msg = "Your rank is set to "..levelValue
-        if changeSession then
-            msg = msg .. ", changing session."
-            network.go_online(true)
-        else
-            msg = msg .. ", change session to apply."
-        end
-        gui.show_message("Rank editor", msg)
-    end
-end
-
--- Rank Editor Tab
-RankEditor = reoverymenu:add_tab("Custom Rank Editor")
-RankEditor:add_text("Set your rank to:")
-local rankLevel = RankEditor:add_input_int("rank")
-
-
-RankEditor:add_button("Set rank and change session", function()
-    setRankRP(rankLevel:get_value(), false, true)
-end)
-
--- Crew Rank Editor Tab
-CrewRankEditor = reoverymenu:add_tab("Crew Rank Editor")
-CrewRankEditor:add_text("Set your Rank to:")
-local crewRankLevel = CrewRankEditor:add_input_int("Crew Rank")
-
-CrewRankEditor:add_button("set Crew Rank and change session", function()
-    setRankRP(crewRankLevel:get_value(), false, true)
-end)
-
-    
-    LatestUnlock = reoverymenu:add_tab("Unlocker Menu")
+--[[ Generic Unlocker Menu ]]
+    LatestUnlock = recoverymenu:add_tab("Unlocker Menu")
 -- Removed LCSM Unlocker as it had no functionality. will add into generic unlocks later when bools are known
 
 local unlocks_config = require("elexon-incl.unlocks")
@@ -153,30 +96,32 @@ local unlocks_config = require("elexon-incl.unlocks")
 function unlock_packed_bools(from, to)
     for i = from, to do
         stats.set_packed_stat_bool(i, true)
-        log.info("[DEBUG] Unlocking stat ID:", i) -- prints to YimMenu console
+        -- log.info("[DEBUG] Unlocking stat ID:", i) -- prints to YimMenu console. commented out to stop spam and clogging of logs
     end
 end
 
 LatestUnlock:add_button("Unlock Everything", function()
-    log.info("[DEBUG] Starting to Unlock Everything") -- optional start marker
+    log.info("[DEBUG] Starting to Unlock Everything")
 
-    -- Generic unlocks
+    -- packed bools
     for _, range in ipairs(unlocks_config.generic) do
         unlock_packed_bools(range.from, range.to)
     end
 
-    -- Gender-specific unlocks
     local gender_ranges = player_male and unlocks_config.male or unlocks_config.female
     for _, range in ipairs(gender_ranges) do
         unlock_packed_bools(range.from, range.to)
     end
 
-    log.info("[DEBUG] Finished Unlock Everything") -- optional end marker
+    -- normal stats
+    stat_unlocks.apply(MPX)
+
+    log.info("[DEBUG] Finished Unlock Everything")
 end)
 
 
 
---[[ Risky Money Methods ]]
+--[[ Risky Money Methods 
 
 -- Hashes might be wrong, nothing gets added in game but logs show its triggered
 
@@ -253,7 +198,7 @@ end)
     end
     
     function TransactionManager:Init()
-        local sub_transactionL  = reoverymenu:add_tab("Risky Money Method(Patched)")
+        local sub_transactionL  = recoverymenu:add_tab("Risky Money Method(Patched)")
 
         sub_transactionL:add_button("Trigger All Money Transactions(PATCHED)", function()
             if self.allTriggered then
@@ -274,6 +219,8 @@ end)
     
     TransactionManager.new():Init()
 
+    
+]]
 
 --[[ Nightclub Money Loop & TP Functions ]]
 
@@ -318,7 +265,7 @@ end
 --[[ Nightclub Money Loop ]]
 -- Improved: Increased SafeAmount for higher payouts, adjusted timing for better triggering <AI shit still only gives 1.5k
 
-    NightClubMoney = reoverymenu:add_tab("Nightclub money loop")
+    NightClubMoney = recoverymenu:add_tab("Nightclub money loop")
 
     SafeAmount = 2000000  -- Increased from 250000 for higher payouts
     SafeCapacity = 23680 -- NIGHTCLUBMAXSAFEVALUE
@@ -377,7 +324,7 @@ end
 
 --[[ Report Checker & Editor. might add auto session change for applying Later ]] 
 
-    CheckUrReports = reoverymenu:add_tab("REPORTS")
+    CheckUrReports = recoverymenu:add_tab("Report Checker & Editor")
 local function add_editable_report(label, stat_key)
     local current = stats.get_int(stat_key)
     CheckUrReports:add_text(label .. ": " .. current)
@@ -505,7 +452,7 @@ ilovecredits = settings:add_tab("Credits <3")
     TCC:add_text("Elexon Main Developer, Script Writer & Tester")
     TCC:add_text("Reach out to me on Discord @njdergeilomat")
 
-    Rrocas = ilovecredits:add_tab("Rrocas")
+    Rrocas = ilovecredits:add_tab("RROCAS - Rrocas")
     Rrocas:add_text("Elexon Co-Developer, Script Writer & Tester")
     
 

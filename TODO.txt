@@ -1,9 +1,8 @@
+try implementing rank editing from
+https://github.com/YimMenu-Lua/RankEditor
+
+fix nightclub safe loop and tp to nightclub
+
 update hashes for risky money methods
-
-Fix "unlock everything"
-
-improve and implement unlocks2.lua into elexon.lua
-
-improve and implement kd_editor.lua into elexon.lua
 
 add script settings that might be needed
