@@ -12,6 +12,12 @@ end
 player_male = (ENTITY.GET_ENTITY_MODEL(PLAYER.PLAYER_PED_ID()) == joaat("mp_m_freemode_01"))
 player_female = (ENTITY.GET_ENTITY_MODEL(PLAYER.PLAYER_PED_ID()) == joaat("mp_m_freemode_0"))
 
+-- Validate API globals
+if not ENTITY then
+    print("ENTITY API not found — you might be on an unsupported YimMenu version!")
+    return
+end
+
 FMISSIONC = "fm_mission_controller"
 FMISSIONC2020 = "fm_mission_controller_2020"
 HISLANDP = "heist_island_planning"
