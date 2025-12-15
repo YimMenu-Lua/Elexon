@@ -43,8 +43,8 @@ body:
     attributes:
       label: Breaking Change
       options:
-        - No
-        - Yes
+        - "No"
+        - "Yes"
     validations:
       required: true
 
@@ -53,9 +53,9 @@ body:
     attributes:
       label: Priority
       options:
-        - Nice to have
-        - Important
-        - Critical
+        - "Nice to have"
+        - "Important"
+        - "Critical"
 
   - type: textarea
     id: context
