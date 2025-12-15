@@ -83,8 +83,7 @@ body:
     id: logs
     attributes:
       label: Logs / Error Output
-      description: Paste relevant console output or logs. **Do not paste screenshots of text.**
-      Path to error log "C:\Users\[Your Username]\AppData\Roaming\YimMenu or fork\cout.log"
+      description: Paste relevant console output or logs. **Do not paste screenshots of text.** Path to error log "C:\Users\[Your Username]\AppData\Roaming\YimMenu or fork\cout.log"
       render: shell
       placeholder: |
         [Elexon] Error: attempt to index a nil value
