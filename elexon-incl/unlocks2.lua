@@ -2919,7 +2919,7 @@ stats.set_int(MPX() .. "GANGOPS_FLOW_MISSION_PROG", 240)
 
         stats.set_bool(MPX() .. "AWD_500_HEADSHOTS", true)
 
-        for i = 262145 + 30958, 262145 + 30987 do
+        for i = 262145 + 31047, 262145 + 31076 do
             globals.set_float(i, 100000)
 
         end
@@ -2940,8 +2940,8 @@ stats.set_int(MPX() .. "GANGOPS_FLOW_MISSION_PROG", 240)
         stats.set_int(MPX() .. "SALV23_SCOPE_BS", -1)
         stats.set_int(MPX() .. "SALV23_INST_PROG", -1)
 
-        globals.set_int(262145 + 35157, 1) --XMASGIFTS2023
-        globals.set_int(262145 + 35158, 1) --NEWYEARSGIFTS2023
+        globals.set_int(262145 + 35244, 1) --XMASGIFTS2023
+        globals.set_int(262145 + 35245, 1) --NEWYEARSGIFTS2023
 
         stats.set_masked_int(MPX() .. "DLC22022PSTAT_INT536", 10, 16, 8)
 
