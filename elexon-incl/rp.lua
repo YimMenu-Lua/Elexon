@@ -44,7 +44,7 @@ local function setRankRP(levelValue, isCrew, changeSession)
             log.debug("changing session...")
 
             -- Search new session
-            globals.set_int(1575015, 11) -- 1, 11, 6, 10, 3, 2 - newPublic, inviteOnly, closedFriends, solo, crew, closedCrew -- UC
+            globals.set_int(1575042, 11) -- 1, 11, 6, 10, 3, 2 - newPublic, inviteOnly, closedFriends, solo, crew, closedCrew -- UC
             globals.set_int(1574589, 1)
             globals.set_int(1574589, 0)
         end
