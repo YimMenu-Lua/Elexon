@@ -22,8 +22,10 @@ FMISSIONC = "fm_mission_controller"
 FMISSIONC2020 = "fm_mission_controller_2020"
 HISLANDP = "heist_island_planning"
 
-log.info("TCC & RROCAS", "Love you internet people <3")
+log.info("TCT & Rrocas", "Love you internet people <3")
 log.info("Enjoy Elexon :D")
+
+--SWYgeW91IGRlY29kZWQgdGhpcywgeW91wrRyZSBwcm9iYWJseSBjdXJpb3VzLi4gc2hvb3QgbWUgYSBtc2cgb24gZGlzY29yZCBAbmpkZXJnZWlsb21hdA==
 
 
 ------------------------------------------------------------------------------
@@ -52,7 +54,7 @@ log.info("Enjoy Elexon :D")
     VehiclesMenu = ScriptMainMenu:add_tab("Vehicle Menu")                                   -- Vehicle Menu
 
 
-    settings = ScriptMainMenu:add_tab("Script Settings")                                    -- Settings Tab
+    SettingsMenu = ScriptMainMenu:add_tab("Script Settings")                                    -- Settings Tab
     
 
 
@@ -66,38 +68,12 @@ require("elexon-incl.rank_editor")(RP_settings)                                 
 require("elexon-incl.self_menu")(SelfTab)                                                   -- Self Menu
 require("elexon-incl.money_methods")(recoverymenu, NightClub)                               -- Money Methods
 require("elexon-incl.vehicle_menu")(VehiclesMenu)                                           -- Vehicle Menu
+require("elexon-incl.settings")(SettingsMenu)                                               -- Settings Menu
 
 local packed_unlocks = require("elexon-incl.unlocks")
 local unlocks_config = require("elexon-incl.unlocks")                                       -- load the unlocks configuration
 local stat_unlocks   = require("elexon-incl.unlocks2")
 
-local removed_vehicles = require("elexon-incl.removed_vehicles")                            -- load the removed vehicles list
-
-
-
-
-
-
-
-
-------------------------------------------------------------------------------
---[[ Removed Vehicles Auto-Loader(on session start) ]]--
-------------------------------------------------------------------------------
-
-local removed_vehicles_triggered = false
-
-script.register_looped("removed_vehicles_auto", function(script)
-    script:yield()
-    if network.is_session_started() and not removed_vehicles_triggered then
-        log.debug("[Load Removed Vehicles][DEBUG] Starting auto-trigger for removed vehicles")
-        for _, offset in ipairs(removed_vehicles) do -- iterate through each offset
-            print("[Load Removed Vehicles][DEBUG] Setting global: " .. tostring(262145 + offset))
-            globals.set_int(262145 + offset, 1) -- set the global to 1
-        end
-        log.debug("[Load Removed Vehicles][DEBUG] Finished auto-trigger")
-        removed_vehicles_triggered = true
-    end
-end)
 
 ------------------------------------------------------------------------------
 --[[ Missions Menu (seems unnecessary for the scripts purpose atm) ]]--
@@ -161,39 +137,3 @@ end)
 
 
 
-function MP_INDEX()
-    return stats.get_int("MPPLY_LAST_MP_CHAR")
-end
-
-
-
-
-
-----------------------------------------------------------------------
-------[[ Settings Section ]]------------------------------------------
-----------------------------------------------------------------------
-
-
-settings:add_text("No settings available yet.")
-
-
-
-----------------------------------------------------------------------
-------[[ Credits Section (implemented into settings tab) ]]-----------
-----------------------------------------------------------------------
-
-ilovecredits = settings:add_tab("Credits <3")
-
-    TCC = ilovecredits:add_tab("TCC - TheCookieTho")
-    TCC:add_text("Elexon Main Developer, Script Writer & Tester")
-    TCC:add_text("Reach out to me on Discord @njdergeilomat")
-
-    Rrocas = ilovecredits:add_tab("RROCAS - Rrocas")
-    Rrocas:add_text("Elexon Co-Developer, Script Writer & Tester")
-    
-
-    SpecialThanks = ilovecredits:add_tab("Special Thanks To:")
-    SpecialThanks:add_text("INTRXDUCE - For script base(UTHENSIA)")
-    SpecialThanks:add_text("ShinyWasabi - For Claiming Vehicle as PV script")
-    SpecialThanks:add_text("Alestarov - For Nightclub money loop & tp functions")
-    SpecialThanks:add_text("YimMura & YimMenu Collaborators - For YimMenu API")
