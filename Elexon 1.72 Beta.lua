@@ -247,8 +247,7 @@ local NightclubPropertyInfo = {
 
 -- Helper functions to get nightclub offsets
 local function GetOnlineWorkOffset()
-    local playerid = globals.get_int(1574918)
-    return (1853988 + 1 + (playerid * 867) + 267)
+    return (1853988 + 1 + self.get_id() + 267)
 end
 
 local function GetNightClubOffset()
@@ -274,20 +273,18 @@ end
 
     NightClubMoney = recoverymenu:add_tab("Nightclub money loop")
 
-    SafeAmount = 2000000  -- Increased from 250000 for higher payouts
-    SafeCapacity = 23680 -- NIGHTCLUBMAXSAFEVALUE
-    IncomeStart = 23657 -- NIGHTCLUBINCOMEUPTOPOP5
-    IncomeEnd = 23676 -- NIGHTCLUBINCOMEUPTOPOP100
-    local NLCl = 268
-    NLCl = 268 -- Local index for triggering nightclub payout in am_mp_nightclub
+    SafeAmount = 250000  -- this is the max amount if its over limit it will trigger silent or non silent transaction errors depending on the 3 globals below in --> Clear some globals to prevent issues
+    SafeCapacity = 23769 -- NIGHTCLUBMAXSAFEVALUE
+    IncomeStart = 23746 -- NIGHTCLUBINCOMEUPTOPOP5
+    IncomeEnd = 23765 -- NIGHTCLUBINCOMEUPTOPOP100
+    NLCl = 206 + 32 + 19 + 1 -- Local index for triggering nightclub payout in am_mp_nightclub
     
     NCRSCB = NightClubMoney:add_checkbox("Enable Nightclub money loop")
     script.register_looped("nightclubremotelooptest", function(script)
         script:yield()
         if NCRSCB:is_enabled() == true then
             -- Calculate safe value global (adjusted for better accuracy)
-            local player_id = globals.get_int(1574918)  -- Get player index
-            SafeValue = 1845221 + player_id * 867 + 354 + 10  -- More precise offset for nightclub safe
+            SafeValue = 1845250 + self.get_id() + 260 + 364 + 5  -- More precise offset for nightclub safe
             
             -- Set income globals to high value for max earnings
             for i = IncomeStart, IncomeEnd do
@@ -296,7 +293,7 @@ end
             -- Set safe capacity
             globals.set_int(262145 + SafeCapacity, SafeAmount)
             -- Max popularity
-            globals.set_int(262145 + 30106, 100)
+            stats.set_int(MPX() .. "CLUB_POPULARITY", 1000)
             -- Reset pay time
             stats.set_int(MPX() .. "CLUB_PAY_TIME_LEFT", -1)
             
@@ -307,9 +304,9 @@ end
             locals.set_int("am_mp_nightclub", NLCl, 1)
             
             -- Clear some globals to prevent issues
-            globals.set_int(4538089, 0)
-            globals.set_int(4538090, 0)
-            globals.set_int(4538091, 0)
+            globals.set_int(4516902, 0)
+            globals.set_int(4516903, 0)
+            globals.set_int(4516904, 0)
             
             script:sleep(500)  -- Shorter sleep between loops
         end
