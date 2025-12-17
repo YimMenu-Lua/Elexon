@@ -6,3 +6,6 @@ elexon-incl/incl Template
 
 # Ingore TODO
 TODO.txt
+
+# ignore implemented script
+vehicle_reard.lua
