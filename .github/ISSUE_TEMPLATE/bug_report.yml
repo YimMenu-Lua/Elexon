@@ -1,0 +1,133 @@
+name: Bug / Issue Report
+description: Report a bug or unexpected behavior in Elexon
+title: "[Bug]: "
+labels: ["bug"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Read Before Submitting
+        Issues **without reproduction steps, logs, or environment details may be closed**.
+        Be clear, be specific, and assume the developer has *never* seen your setup.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Briefly describe the issue in 1–2 sentences.
+      placeholder: "Elexon crashes when executing command X under condition Y."
+    validations:
+      required: true
+
+  - type: input
+    id: elexon_version
+    attributes:
+      label: Elexon Version / Commit
+      description: Version number or commit hash.
+      placeholder: "v1.2.3 or commit abc123"
+    validations:
+      required: true
+
+  - type: input
+    id: yim_version
+    attributes:
+      label: YimMenu Version
+      description: Exact YimMenu/fork version in use.
+      placeholder: "YimMenu nightly 2024-xx-xx"
+    validations:
+      required: true
+
+  - type: input
+    id: gta_version
+    attributes:
+      label: GTA V Version
+      description: Game version (Steam / Epic / Rockstar + build if known).
+      placeholder: "Steam – latest"
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro_steps
+    attributes:
+      label: Steps to Reproduce
+      description: Exact steps to reliably reproduce the issue.
+      placeholder: |
+        1. Launch GTA V
+        2. Inject YimMenu or fork
+        3. Load Elexon
+        4. Run command X
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should happen?
+      placeholder: "Command executes successfully without errors."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happens?
+      placeholder: "Script errors and stops executing."
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Error Output
+      description: Paste relevant console output or logs. **Do not paste screenshots of text.** Path to error log "C:\Users\[Your Username]\AppData\Roaming\YimMenu or fork\cout.log"
+      render: shell
+      placeholder: |
+        [Elexon] Error: attempt to index a nil value
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: Frequency
+      options:
+        - Happens every time
+        - Happens sometimes
+        - Happened once
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Blocking (script unusable)
+        - Major (core feature broken)
+        - Minor (workaround exists)
+        - Cosmetic (non-functional)
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Anything else that may help (workarounds, related issues, recent changes).
+      placeholder: "Started after updating YimMenu / occurs only in online session."
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-Submission Checklist
+      options:
+        - label: I can reproduce this issue
+          required: true
+        - label: I searched for existing issues(open & closed)
+          required: true
+        - label: I did not co-load any other script/s
+          required: true
