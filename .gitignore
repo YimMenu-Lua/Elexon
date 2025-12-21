@@ -9,3 +9,6 @@ TODO.txt
 
 # ignore implemented script
 vehicle_reward.lua
+
+# ignore License.txt
+LICENSE.txt
