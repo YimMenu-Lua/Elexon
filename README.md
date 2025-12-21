@@ -1,3 +1,5 @@
+join the discord: https://discord.gg/ZT5GbNtZZb
+
 📑 Table of Contents
 ---
 - [What Is Elexon?](#what-is-elexon)
