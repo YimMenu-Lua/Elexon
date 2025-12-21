@@ -15,11 +15,11 @@ end
 local nightclubs = {
     [0] = { name = "Mission Row",        x = 345.7519,  y = -978.8848, z = 29.2681 },
     [1] = { name = "Strawberry",         x = -120.906,  y = -1260.49,  z = 29.2088 },
-    [11] = { name = "West Vinewood",      x = 5.53709,   y = 221.35,    z = 107.6566 },
+    [2] = { name = "West Vinewood",      x = 5.53709,   y = 221.35,    z = 107.6566 },
     [3] = { name = "Cypress Flats",      x = 871.47,    y = -2099.57,  z = 30.3768 },
     [4] = { name = "LSIA",               x = -676.625,  y = -2458.15,  z = 13.8444 },
     [5] = { name = "Elysian Island",     x = 195.534,   y = -3168.88,  z = 5.7903 },
-    [2] = { name = "Downtown Vinewood",  x = 373.05,    y = 252.13,    z = 102.9097 },
+    [6] = { name = "Downtown Vinewood",  x = 373.05,    y = 252.13,    z = 102.9097 },
     [7] = { name = "Del Perro",          x = -1283.38,  y = -649.916,  z = 26.5198 },
     [8] = { name = "Vespucci Canals",    x = -1174.85,  y = -1152.3,   z = 5.56128 },
     [9] = { name = "La Mesa",            x = 757.009,   y = -1332.32,  z = 27.1802 }
@@ -113,7 +113,6 @@ end
             -- Reset pay time
             stats.set_int(MPX() .. "CLUB_PAY_TIME_LEFT", -1)
             
-            script:sleep(1000)  -- Reduced sleep for faster triggering
             
             -- Set safe value and trigger payout
             globals.set_int(SafeValue, SafeAmount)
@@ -124,7 +123,7 @@ end
             globals.set_int(4516903, 0)
             globals.set_int(4516904, 0)
             
-            script:sleep(500)  -- Shorter sleep between loops
+            script:sleep(2500)  -- 2,5 second delay before next loop seems to work fine
         end
     end)
     
