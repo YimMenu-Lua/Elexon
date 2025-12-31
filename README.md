@@ -1,6 +1,6 @@
 join the discord: https://discord.gg/ZT5GbNtZZb
 
-THIS SCRIPT IS FOR GTA5 *LEGACY* ONLY
+THIS SCRIPT IS FOR GTA5 **LEGACY** ONLY
 
 📑 Table of Contents
 ---
