@@ -1,4 +1,5 @@
 join the discord: https://discord.gg/ZT5GbNtZZb
+THIS SCRIPT IS FOR GTA5 *LEGACY* ONLY
 
 📑 Table of Contents
 ---
@@ -20,7 +21,7 @@ join the discord: https://discord.gg/ZT5GbNtZZb
 
 ## What Is Elexon?
 ---
-Elexon is a Lua script made for YimMenu on GTA5 LEGACY
+Elexon is a Lua script made for YimMenu, a GTA5 LEGACY modmenu
 
 If installed correctly, it will load automatically when YimMenu starts.
 ---
